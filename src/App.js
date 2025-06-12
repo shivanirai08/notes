@@ -1,14 +1,11 @@
-import logo from './logo.svg';
 import './App.css';
-import Card from './Compoments/Card';
+import Home from './Pages/Home';
 
 function App() {
   return (
-    <>
-    <div className='m-8'>
-      <Card />
+    <div>
+      <Home />
     </div>
-    </>
   );
 }
 
