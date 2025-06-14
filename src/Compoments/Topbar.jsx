@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
 import { SunIcon, MoonIcon } from '@heroicons/react/24/solid';
+import Addnote from '../Pages/Addnote';
 
 export default function TopBar() {
   const [darkMode, setDarkMode] = useState(false);
+  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
     if (darkMode) {
@@ -27,7 +29,7 @@ export default function TopBar() {
         </svg>
       </div>
       <div className='flex items-center gap-4'>
-        <button className="bg-blue-700 text-white px-4 py-2 rounded-md hover:bg-blue-800 transition flex items-center gap-2">
+        <button onClick={() => setShowModal(true)} className="bg-blue-700 text-white px-4 py-2 rounded-md hover:bg-blue-800 transition flex items-center gap-2">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -40,6 +42,8 @@ export default function TopBar() {
           </svg>
           Add Note
         </button>
+        <Addnote isOpen={showModal} onClose={() => setShowModal(false)} />
+          
         <button onClick={() => setDarkMode(!darkMode)}
           className="p-2 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-white hover:scale-105 transition-transform">
           {darkMode ? (

@@ -36,3 +36,18 @@
     transform: rotate(360deg);
   }
 } */
+
+/* Target the Quill editor area */
+.my-quill .ql-container {
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  background-color: transparent; /* Optional */
+  padding: 0; /* Optional */
+}
+
+.my-quill .ql-editor {
+  outline: none !important;
+  border: none !important;
+  padding: 0.75rem; /* Optional spacing */
+}
