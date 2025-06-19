@@ -2,24 +2,33 @@ import React from 'react'
 import StarRateOutlinedIcon from '@mui/icons-material/StarRateOutlined';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import CreateOutlinedIcon from '@mui/icons-material/CreateOutlined';
+import { colorOptions } from '../Pages/Addnote';
+import { useTheme } from '../ThemeContext';
+
 
 function Card({title, content, date, color}) {
+  const { darkMode } = useTheme();
+  const selectedColorObject = colorOptions.find(c => c.name === color); 
   return (
     <>
-    <div className={`relative w-64 h-64 bg-${color} dark:bg-dark${color} rounded-lg shadow-lg dark:drop-shadow-lg overflow-hidden group`}>
+    <div className={`relative w-64 h-64 rounded-lg shadow-lg dark:drop-shadow-lg overflow-hidden group`} style={{ backgroundColor: darkMode
+      ? selectedColorObject?.darkhex : selectedColorObject?.hex,}}>
     <div className="p-4 flex flex-col justify-between h-full z-0 relative">
 
     {/* Title */}
     <div className="flex justify-between items-center mb-4 gap-2">
       <h3 className="font-bold text-lg truncate">{title}</h3>
       <button className="opacity-0 group-hover:opacity-100 group-hover:text-secondarytext dark:group-hover:text-zinc-700">
-      <StarRateOutlinedIcon fontSize="small"/>
-    </button>
+        <StarRateOutlinedIcon fontSize="small"/>
+      </button>
     </div>
 
     {/* Content */}
-    <div className="text-sm text-gray-800 dark:text-gray-950 overflow-hidden overflow-ellipsis line-clamp-6">
-      <div dangerouslySetInnerHTML={{ __html: content }} />
+    <div
+      className="text-sm text-gray-800 dark:text-gray-950 overflow-hidden overflow-ellipsis line-clamp-6 flex-1 flex flex-col justify-start"
+      style={{ minHeight: 0 }}
+    >
+      <div dangerouslySetInnerHTML={{ __html: content }} className="flex-1" />
     </div>
 
     {/* Footer */}

@@ -8,16 +8,18 @@ function Home() {
   const notes = useSelector((state) => state.notes.notes);
 
   return (
-    <div className=' relative flex h-screen w-full'>
+    <div className='relative flex h-screen w-full'>
       <Navbar />
-      <div className=' bg-zinc-50 dark:bg-zinc-900  w-full'>
-          <Topbar />
-          <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4'>
+      <div className='bg-zinc-50 dark:bg-zinc-900 w-full'>
+        <Topbar />
+        <div className="flex flex-wrap gap-6 p-4" style={{ alignItems: 'flex-start' }}>
           {notes.map((note) => (
-            <Card key={note.id} title={note.title} content={note.content} date={note.date} color={note.color} />
+            <div key={note.id} style={{ flex: '0 1 250px', maxWidth: '100%' }}>
+              <Card title={note.title} content={note.content} date={note.date} color={note.color} />
+            </div>
           ))}
         </div>
-        </div>
+      </div>
     </div>
   )
 }

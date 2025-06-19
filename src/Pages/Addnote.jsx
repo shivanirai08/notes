@@ -3,10 +3,13 @@ import { useSelector, useDispatch } from 'react-redux';
 import { closeModal, updateNoteField, saveNote, resetModal } from '../redux/noteSlice';
 import ReactQuill from 'react-quill-new';
 import 'react-quill-new/dist/quill.snow.css';
+import { useTheme } from '../ThemeContext';
 
 const Addnote = () => {
   const dispatch = useDispatch();
   const { isOpen, title, content, selectedColor } = useSelector((state) => state.notes);
+  const { darkMode } = useTheme();
+
   // Handle save action
   const handleSave = () => {
     const trimmedTitle = title.trim();
@@ -78,7 +81,7 @@ const Addnote = () => {
       className={`w-6 h-6 rounded-full border-gray-400 dark:border-gray-700 ${
         selectedColor === name ? 'border-0 ring-2 ring-blue-700' : 'border-2'
       }`}
-      style={{ backgroundColor: document.documentElement.classList.contains('dark') ? darkhex : hex }}
+      style={{ backgroundColor: darkMode ? darkhex : hex }}
     />
   ))}
           </div>
@@ -95,3 +98,11 @@ const Addnote = () => {
 };
 
 export default Addnote;
+export const colorOptions = [
+  { name: 'bluebg', hex: '#E7F6FF', darkhex: '#5FD1FA' },
+  { name: 'greenbg', hex: '#EAFFFB', darkhex: '#E6EE99' },
+  { name: 'purplebg', hex: '#EEE5FF', darkhex: '#B096F6' },
+  { name: 'yellowbg', hex: '#FFFACA', darkhex: '#F7CB7F' },
+  { name: 'orangebg', hex: '#FFE3D3', darkhex: '#EFA07A' },
+  { name: 'pinkbg', hex: '#FFE8EC', darkhex: '#F4A0AF' }, 
+];

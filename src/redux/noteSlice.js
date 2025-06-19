@@ -35,7 +35,7 @@ const noteSlice = createSlice({
     resetModal: (state) => {
       state.title = '';
       state.content = '';
-      state.selectedColor = '#FFFACD';
+      state.selectedColor = 'bluebg';
     },
   },
 });

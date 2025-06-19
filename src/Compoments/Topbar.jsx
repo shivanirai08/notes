@@ -1,21 +1,15 @@
-import { useState, useEffect } from 'react';
+import { useState} from 'react';
 import { SunIcon, MoonIcon } from '@heroicons/react/24/solid';
 import Addnote from '../Pages/Addnote';
 import {useDispatch} from 'react-redux';
 import {openModal} from '../redux/noteSlice';
+import { useTheme } from '../ThemeContext';
 
 export default function TopBar() {
   const dispatch = useDispatch();
   const [showModal, setShowModal] = useState(false);
-  const [darkMode, setDarkMode] = useState(false);
+  const { darkMode, setDarkMode } = useTheme();
 
-  useEffect(() => {
-    if (darkMode) {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
-  }, [darkMode]);
 
   return (
     <div className="w-full flex justify-between items-center gap-4 px-4 py-3">
