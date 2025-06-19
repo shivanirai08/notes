@@ -1,10 +1,13 @@
 import { useState, useEffect } from 'react';
 import { SunIcon, MoonIcon } from '@heroicons/react/24/solid';
 import Addnote from '../Pages/Addnote';
+import {useDispatch} from 'react-redux';
+import {openModal} from '../redux/noteSlice';
 
 export default function TopBar() {
-  const [darkMode, setDarkMode] = useState(false);
+  const dispatch = useDispatch();
   const [showModal, setShowModal] = useState(false);
+  const [darkMode, setDarkMode] = useState(false);
 
   useEffect(() => {
     if (darkMode) {
@@ -29,7 +32,7 @@ export default function TopBar() {
         </svg>
       </div>
       <div className='flex items-center gap-4'>
-        <button onClick={() => setShowModal(true)} className="bg-blue-700 text-white px-4 py-2 rounded-md hover:bg-blue-800 transition flex items-center gap-2">
+        <button onClick={() => dispatch(openModal())} className="bg-blue-700 text-white px-4 py-2 rounded-md hover:bg-blue-800 transition flex items-center gap-2">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
