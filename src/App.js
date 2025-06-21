@@ -1,12 +1,13 @@
 import './App.css';
 import React from 'react';
 import Home from './Pages/Home';
+import { ThemeProvider } from './ThemeContext';
 
 function App() {
   return (
-    <div>
+    <ThemeProvider>
       <Home />
-    </div>
+    </ThemeProvider>
   );
 }
 

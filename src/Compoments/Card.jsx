@@ -2,32 +2,41 @@ import React from 'react'
 import StarRateOutlinedIcon from '@mui/icons-material/StarRateOutlined';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import CreateOutlinedIcon from '@mui/icons-material/CreateOutlined';
+import { colorOptions } from '../Pages/Addnote';
+import { useTheme } from '../ThemeContext';
 
-function Card() {
+
+function Card({title, content, date, color}) {
+  const { darkMode } = useTheme();
+  const selectedColorObject = colorOptions.find(c => c.name === color); 
   return (
     <>
-    <div class="relative w-64 h-64 bg-bluebg dark:bg-darkbluebg rounded-lg shadow-lg dark:drop-shadow-lg overflow-hidden group">
-    <div class="p-4 flex flex-col justify-between h-full z-0 relative">
+    <div className={`relative w-64 h-64 rounded-lg shadow-lg dark:drop-shadow-lg overflow-hidden group`} style={{ backgroundColor: darkMode
+      ? selectedColorObject?.darkhex : selectedColorObject?.hex,}}>
+    <div className="p-4 flex flex-col justify-between h-full z-0 relative">
 
     {/* Title */}
-    <div class="flex justify-between items-center mb-4 gap-2">
-      <h3 class="font-bold text-lg truncate">Sticky Note Title Sticky Note Title</h3>
-      <button class="opacity-0 group-hover:opacity-100 group-hover:text-secondarytext dark:group-hover:text-zinc-700">
-      <StarRateOutlinedIcon fontSize="small"/>
-    </button>
+    <div className="flex justify-between items-center mb-4 gap-2">
+      <h3 className="font-bold text-lg truncate">{title}</h3>
+      <button className="opacity-0 group-hover:opacity-100 group-hover:text-secondarytext dark:group-hover:text-zinc-700">
+        <StarRateOutlinedIcon fontSize="small"/>
+      </button>
     </div>
 
     {/* Content */}
-    <p class="text-sm text-gray-800 dark:text-gray-950 overflow-hidden overflow-ellipsis line-clamp-6">
-      This is a sticky note. The content should be trimmed to show ellipsis if too long for the container.This is a sticky note. The content should be trimmed to show ellipsis if too long for the container. The content should be trimmed to show ellipsis if too long for the container.
-    </p>
+    <div
+      className="text-sm text-gray-800 dark:text-gray-950 overflow-hidden overflow-ellipsis line-clamp-6 flex-1 flex flex-col justify-start"
+      style={{ minHeight: 0 }}
+    >
+      <div dangerouslySetInnerHTML={{ __html: content }} className="flex-1" />
+    </div>
 
     {/* Footer */}
-    <div class="flex justify-between items-center mt-4 pt-4 text-xs text-gray-600 dark:text-gray-800">
-      <span>10 June 2025, 3:45 PM</span>
-      <div class="space-x-2">
-        <button class="opacity-0 group-hover:opacity-100 group-hover:text-zinc-600 dark:group-hover:text-zinc-700"><CreateOutlinedIcon fontSize="small"/></button>
-        <button class="opacity-0 group-hover:opacity-100 group-hover:text-zinc-600 dark:group-hover:text-zinc-700"><DeleteOutlineOutlinedIcon fontSize="small"/></button>
+    <div className="flex justify-between items-center mt-4 pt-4 text-xs text-gray-600 dark:text-gray-800">
+      <span>{date}</span>
+      <div className="space-x-2">
+        <button className="opacity-0 group-hover:opacity-100 group-hover:text-zinc-600 dark:group-hover:text-zinc-700"><CreateOutlinedIcon fontSize="small"/></button>
+        <button className="opacity-0 group-hover:opacity-100 group-hover:text-zinc-600 dark:group-hover:text-zinc-700"><DeleteOutlineOutlinedIcon fontSize="small"/></button>
       </div>
     </div>
   </div>
