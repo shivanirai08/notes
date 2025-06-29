@@ -4,10 +4,12 @@ import { closeModal, updateNoteField, saveNote, resetModal } from '../redux/note
 import ReactQuill from 'react-quill-new';
 import 'react-quill-new/dist/quill.snow.css';
 import { useTheme } from '../ThemeContext';
+import { editNote } from '../redux/noteSlice';
 
 const Addnote = () => {
   const dispatch = useDispatch();
   const { isOpen, title, content, selectedColor } = useSelector((state) => state.notes);
+  const editingNoteId = useSelector((state) => state.notes.editingNoteId);
   const { darkMode } = useTheme();
 
   // Handle save action
@@ -18,11 +20,23 @@ const Addnote = () => {
       alert('Title cannot be empty or just spaces');
       return;
     }
+
     if (!trimmedContent) {
       alert('Content cannot be empty or just spaces');
       return;
     }
-    dispatch(saveNote());
+if (editingNoteId) {
+  dispatch(
+    editNote({
+      id: editingNoteId,
+        title,
+        content,
+        color: selectedColor,
+    })
+  );
+} else {
+  dispatch(saveNote());
+}
     dispatch(resetModal());
     dispatch(closeModal());
   };
@@ -47,7 +61,7 @@ const Addnote = () => {
           &times;
         </button>
 
-        <h2 className="text-xl font-semibold mb-4">Add Note</h2>
+        <h2 className="text-xl font-semibold mb-4">{editingNoteId ? 'Edit Note' : 'Add Note'}</h2>
 
         {/* Title */}
         <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Title</p>
