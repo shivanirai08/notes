@@ -2,24 +2,22 @@ import React from 'react'
 import { useState } from 'react';
 import StarBorderOutlinedIcon from '@mui/icons-material/StarBorderOutlined';
 import StarIcon from '@mui/icons-material/Star';
-import ArchiveOutlinedIcon from '@mui/icons-material/ArchiveOutlined';
-import ArchiveIcon from '@mui/icons-material/Archive';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import DeleteIcon from '@mui/icons-material/Delete';
 import KeyboardDoubleArrowLeftOutlinedIcon from '@mui/icons-material/KeyboardDoubleArrowLeftOutlined';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import DashboardOutlinedIcon from '@mui/icons-material/DashboardOutlined';
+import { NavLink } from 'react-router-dom';
 
 function Navbar() {
 
-  const [active, setActive] = useState('Dashboard');
   const [collapsed, setCollapsed] = useState(false);
 
   const menuItems = [
-    { label: 'Dashboard', icon: <DashboardOutlinedIcon />, activeicon: <DashboardIcon /> },
-    { label: 'Favourites', icon: <StarBorderOutlinedIcon />, activeicon: <StarIcon /> },
-    { label: 'Archived', icon: <ArchiveOutlinedIcon />, activeicon: <ArchiveIcon /> },
-    { label: 'Bin', icon: <DeleteOutlineOutlinedIcon />, activeicon: <DeleteIcon /> },
+    { label: 'Dashboard', icon: <DashboardOutlinedIcon />, activeicon: <DashboardIcon />, path: '/' },
+    { label: 'Favourites', icon: <StarBorderOutlinedIcon />, activeicon: <StarIcon />, path: '/favorite' },
+    // { label: 'Archived', icon: <ArchiveOutlinedIcon />, activeicon: <ArchiveIcon /> },
+    { label: 'Bin', icon: <DeleteOutlineOutlinedIcon />, activeicon: <DeleteIcon />, path: '/delete' },
   ];
 
   return (
@@ -36,20 +34,25 @@ function Navbar() {
       {/* Menu Items */}
       <nav className="space-y-2">
         {menuItems.map((item) => (
-          <div
+          <NavLink
             key={item.label}
-            onClick={() => setActive(item.label)}
-            className={`flex gap-3 px-2 py-2 rounded-lg cursor-pointer hover:bg-blue-100 dark:hover:bg-blue-700 transition-all ${
-              active === item.label ? 'bg-blue-200 text-blue-600 dark:bg-blue-900 dark:text-blue-300' : 'text-slate-800 dark:text-slate-50'
-            }`}
-          >
-            {active === item.label ? item.activeicon : item.icon}
-            {!collapsed && <span className="font-medium pr-4">{item.label}</span>}
-          </div>
+            to={item.path}
+            className={({ isActive }) =>
+              `flex items-center gap-3 px-2 py-2 rounded-lg cursor-pointer transition-all ${
+                isActive ? 'bg-blue-200 text-blue-600 dark:bg-blue-900 dark:text-blue-300' : 'text-slate-800 dark:text-slate-50 hover:bg-blue-100 dark:hover:bg-blue-700'
+              }`
+            }>
+            {({ isActive }) => (
+              <>
+                {isActive ? item.activeicon : item.icon}
+                {!collapsed && <span className="font-medium pr-4">{item.label}</span>}
+              </>
+            )}
+          </NavLink>
         ))}
       </nav>
       {/* Collapse Button */}
-      <div className="absolute bottom-4 left-4 flex items-center gap-2 cursor-pointer" onClick={() => setCollapsed(!collapsed)}>
+      <div className="absolute bottom-4 left-4 flex items-center gap-2 cursor-pointer transition-all" onClick={() => setCollapsed(!collapsed)}>
         {!collapsed && <KeyboardDoubleArrowLeftOutlinedIcon className="text-black dark:text-gray-300" />}
         {collapsed && <KeyboardDoubleArrowLeftOutlinedIcon className="text-black rotate-180 dark:text-gray-300" />}
         {!collapsed && <span className="text-sm font-medium dark:text-gray-300">Collapse</span>}
