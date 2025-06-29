@@ -3,6 +3,7 @@ import StarRateOutlinedIcon from "@mui/icons-material/StarRateOutlined";
 import StarRateIcon from "@mui/icons-material/StarRate";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import CreateOutlinedIcon from "@mui/icons-material/CreateOutlined";
+import RestoreOutlinedIcon from "@mui/icons-material/RestoreOutlined";
 import { colorOptions } from "../Pages/Addnote";
 import { useTheme } from "../ThemeContext";
 
@@ -15,6 +16,8 @@ function Card({
   onDelete,
   onEdit,
   onFavorite,
+  isBinMode,
+  onRestore,
 }) {
   const { darkMode } = useTheme();
   const selectedColorObject = colorOptions.find((c) => c.name === color);
@@ -40,7 +43,7 @@ function Card({
               }}
             >
               {isFavorite ? (
-                <StarRateIcon fontSize="small" style={{ color: "#FFD700" }} />
+                <StarRateIcon fontSize="small" style={{ color: "#92400E" }} />
               ) : (
                 <StarRateOutlinedIcon fontSize="small" />
               )}
@@ -62,24 +65,48 @@ function Card({
           <div className="flex justify-between items-center mt-4 pt-4 text-xs text-gray-600 dark:text-gray-800">
             <span>{date}</span>
             <div className="space-x-2">
-              <button
-                className="opacity-0 group-hover:opacity-100 group-hover:text-zinc-600 dark:group-hover:text-zinc-700"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onEdit();
-                }}
-              >
-                <CreateOutlinedIcon fontSize="small" />
-              </button>
-              <button
-                className="opacity-0 group-hover:opacity-100 group-hover:text-zinc-600 dark:group-hover:text-zinc-700"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onDelete();
-                }}
-              >
-                <DeleteOutlineOutlinedIcon fontSize="small" />
-              </button>
+              {isBinMode ? (
+                <>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onRestore();
+                    }}
+                    className="opacity-0 group-hover:opacity-100 group-hover:text-secondarytext dark:group-hover:text-zinc-700">
+                    <RestoreOutlinedIcon fontSize="small" />
+                  </button>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onDelete();
+                    }}
+                    className="opacity-0 group-hover:opacity-100 group-hover:text-red-800 dark:group-hover:text-red-800"
+                  >
+                    <DeleteOutlineOutlinedIcon fontSize="small" />
+                  </button>
+                </>
+              ) : (
+                <>
+                  <button
+                    className="opacity-0 group-hover:opacity-100 group-hover:text-zinc-600 dark:group-hover:text-zinc-700"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onEdit();
+                    }}
+                  >
+                    <CreateOutlinedIcon fontSize="small" />
+                  </button>
+                  <button
+                    className="opacity-0 group-hover:opacity-100 group-hover:text-red-800 dark:group-hover:text-red-800"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onDelete();
+                    }}
+                  >
+                    <DeleteOutlineOutlinedIcon fontSize="small" />
+                  </button>
+                </>
+              )}
             </div>
           </div>
         </div>

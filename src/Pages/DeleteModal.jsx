@@ -1,11 +1,13 @@
 import React from "react";
 
-function DeleteModal({ onConfirm, onCancel }) {
+function DeleteModal({ onConfirm, onCancel, isDeleted }) {
   return (
     <div className="fixed inset-0 bg-black bg-opacity-40 dark:bg-opacity-70 flex items-center justify-center z-50">
       <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-xl text-center">
         <h2 className="text-lg font-semibold mb-4 text-gray-900 dark:text-gray-100">
-          Are you sure you want to delete this note?
+          {isDeleted
+            ? "Do you want to permanently delete this note?"
+            : "Are you sure you want to delete this note?"}
         </h2>
         <div className="flex justify-center gap-4">
           <button

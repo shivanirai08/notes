@@ -1,15 +1,10 @@
-import React  from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { closeModal, updateNoteField, saveNote, resetModal } from '../redux/noteSlice';
-import ReactQuill from 'react-quill-new';
-import 'react-quill-new/dist/quill.snow.css';
-import { useTheme } from '../ThemeContext';
-import { editNote } from '../redux/noteSlice';
+import React from 'react'
+import { editNote } from '../redux/noteSlice'
+import { useDispatch } from 'react-redux'
 
-const Addnote = () => {
+function Editnote() {
   const dispatch = useDispatch();
   const { isOpen, title, content, selectedColor } = useSelector((state) => state.notes);
-  const editingNoteId = useSelector((state) => state.notes.editingNoteId);
   const { darkMode } = useTheme();
 
   // Handle save action
@@ -20,23 +15,11 @@ const Addnote = () => {
       alert('Title cannot be empty or just spaces');
       return;
     }
-
     if (!trimmedContent) {
       alert('Content cannot be empty or just spaces');
       return;
     }
-if (editingNoteId) {
-  dispatch(
-    editNote({
-      id: editingNoteId,
-        title,
-        content,
-        color: selectedColor,
-    })
-  );
-} else {
-  dispatch(saveNote());
-}
+    dispatch(saveNote());
     dispatch(resetModal());
     dispatch(closeModal());
   };
@@ -61,7 +44,7 @@ if (editingNoteId) {
           &times;
         </button>
 
-        <h2 className="text-xl font-semibold mb-4">{editingNoteId ? 'Edit Note' : 'Add Note'}</h2>
+        <h2 className="text-xl font-semibold mb-4">Add Note</h2>
 
         {/* Title */}
         <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Title</p>
@@ -69,7 +52,7 @@ if (editingNoteId) {
           type="text"
           placeholder="Note Title"
           value={title}
-          onChange={(e) => dispatch(updateNoteField({ field: 'title', value: e.target.value }))}
+          onChange={(e) => setTitle(e.target.value)}
           className="w-full mb-4 p-2 border border-dashed border-gray-400 dark:border-gray-600 rounded-md bg-transparent outline-none"
         />
 
@@ -111,12 +94,4 @@ if (editingNoteId) {
   );
 };
 
-export default Addnote;
-export const colorOptions = [
-  { name: 'bluebg', hex: '#E7F6FF', darkhex: '#5FD1FA' },
-  { name: 'greenbg', hex: '#EAFFFB', darkhex: '#E6EE99' },
-  { name: 'purplebg', hex: '#EEE5FF', darkhex: '#B096F6' },
-  { name: 'yellowbg', hex: '#FFFACA', darkhex: '#F7CB7F' },
-  { name: 'orangebg', hex: '#FFE3D3', darkhex: '#EFA07A' },
-  { name: 'pinkbg', hex: '#FFE8EC', darkhex: '#F4A0AF' }, 
-];
+export default Editnote

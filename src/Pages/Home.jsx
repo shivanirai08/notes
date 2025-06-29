@@ -5,9 +5,8 @@ import Topbar from "../Compoments/Topbar";
 import { useSelector } from "react-redux";
 import Opennote from "./Opennote";
 import { useState } from "react";
-import { isFavorite } from "../redux/noteSlice";
+import { startEditingNote, isFavorite } from "../redux/noteSlice";
 import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
 import DeleteModal from "./DeleteModal";
 import { deleteNote } from "../redux/noteSlice";
 
@@ -17,7 +16,6 @@ function Home() {
   const [selectedNoteId, setSelectedNoteId] = useState(null);
   const selectedNote = notes.find((n) => n.id === selectedNoteId);
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const handleDeleteClick = (id) => {
     setSelectedNoteId(id);
@@ -52,7 +50,7 @@ function Home() {
                 date={note.date}
                 color={note.color}
                 onDelete={() => handleDeleteClick(note.id)}
-                onEdit={() => console.log("Edit note")}
+                onEdit={() => dispatch(startEditingNote({ id: note.id }))}
                 onFavorite={() => dispatch(isFavorite({ id: note.id }))}
                 isFavorite={note.isFavorite}
               />
@@ -66,6 +64,7 @@ function Home() {
                 setShowDeleteModal(false);
                 setSelectedNoteId(null);
               }}
+              isDeleted={selectedNote?.isDeleted}
             />
           )}
 
@@ -73,7 +72,7 @@ function Home() {
             <Opennote
               note={selectedNote}
               onClose={() => setSelectedNoteId(null)}
-              onEdit={() => console.log("Edit note")}
+              onEdit={() => dispatch(startEditingNote({ id: selectedNote.id }))}
               onDelete={() => handleDeleteClick(selectedNote.id)}
               onFavorite={() => dispatch(isFavorite({ id: selectedNote?.id }))}
               isFavorite={selectedNote?.isFavorite}
