@@ -90,6 +90,8 @@ export const {
   closeModal,
   updateNoteField,
   saveNote,
+  isFavorite,
+  deleteNote,
   resetModal,
   startEditingNote,
   restoreNote,

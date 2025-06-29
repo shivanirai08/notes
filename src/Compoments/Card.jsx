@@ -50,6 +50,17 @@ function Card({
             </button>
           </div>
 
+          {/* Content */}
+          <div
+            className="text-sm text-gray-800 dark:text-gray-950 overflow-hidden overflow-ellipsis line-clamp-6 flex-1 flex flex-col justify-start"
+            style={{ minHeight: 0 }}
+          >
+            <div
+              dangerouslySetInnerHTML={{ __html: content }}
+              className="flex-1"
+            />
+          </div>
+
           {/* Footer */}
           <div className="flex justify-between items-center mt-4 pt-4 text-xs text-gray-600 dark:text-gray-800">
             <span>{date}</span>
