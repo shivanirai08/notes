@@ -21,28 +21,6 @@ const noteSlice = createSlice({
     closeModal: (state) => {
       state.isOpen = false;
     },
-    isFavorite: (state, action) => {
-      const { id } = action.payload;
-      const note = state.notes.find(note => note.id === id);
-      if (note) {
-        note.isFavorite = !note.isFavorite; // Toggle favorite status
-      }
-    },
-    deleteNote: (state, action) => {
-    const note = state.notes.find(n => n.id === action.payload.id);
-    if (note) {
-      note.isDeleted = true;
-    }
-    },
-    restoreNote: (state, action) => {
-    const note = state.notes.find(n => n.id === action.payload.id);
-    if (note) {
-      note.isDeleted = false;
-    }
-  },
-  permanentlyDeleteNote: (state, action) => {
-    state.notes = state.notes.filter(n => n.id !== action.payload.id);
-  },
     updateNoteField: (state, action) => {
       const { field, value } = action.payload;
       state[field] = value;
