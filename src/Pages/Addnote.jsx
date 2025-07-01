@@ -5,6 +5,7 @@ import ReactQuill from 'react-quill-new';
 import 'react-quill-new/dist/quill.snow.css';
 import { useTheme } from '../ThemeContext';
 import { editNote } from '../redux/noteSlice';
+import { toast } from 'react-toastify';
 
 const Addnote = () => {
   const dispatch = useDispatch();
@@ -17,12 +18,12 @@ const Addnote = () => {
     const trimmedTitle = title.trim();
     const trimmedContent = content.replace(/<(.|\n)*?>/g, '').trim(); 
     if (!trimmedTitle) {
-      alert('Title cannot be empty or just spaces');
+      toast.error('Title cannot be empty or just spaces');
       return;
     }
 
     if (!trimmedContent) {
-      alert('Content cannot be empty or just spaces');
+      toast.error('Content cannot be empty or just spaces');
       return;
     }
 if (editingNoteId) {
@@ -34,8 +35,10 @@ if (editingNoteId) {
         color: selectedColor,
     })
   );
+  toast.success('Note updated successfully');
 } else {
   dispatch(saveNote());
+  toast.success('Note saved successfully');
 }
     dispatch(resetModal());
     dispatch(closeModal());
@@ -54,14 +57,19 @@ if (editingNoteId) {
 
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
-      <div className="bg-white dark:bg-[#1e1e1e] rounded-xl shadow-xl w-full max-w-2xl p-6 relative flex flex-col">
+    <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/60 backdrop-blur-sm">
+      <div className="bg-white dark:bg-[#23272f] rounded-xl shadow-2xl w-full max-w-2xl p-6 relative flex flex-col border border-gray-200 dark:border-gray-700">
         {/* Close */}
-        <button onClick={() => dispatch(closeModal())} className="absolute top-4 right-4 text-xl font-bold text-gray-500 hover:text-black dark:hover:text-white">
+        <button
+          onClick={() => dispatch(closeModal())}
+          className="absolute top-4 right-4 text-xl font-bold text-gray-500 hover:text-black dark:text-gray-400 dark:hover:text-white"
+        >
           &times;
         </button>
 
-        <h2 className="text-xl font-semibold mb-4">{editingNoteId ? 'Edit Note' : 'Add Note'}</h2>
+        <h2 className="text-xl font-semibold mb-4 text-gray-900 dark:text-gray-100">
+          {editingNoteId ? 'Edit Note' : 'Add Note'}
+        </h2>
 
         {/* Title */}
         <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Title</p>
@@ -70,14 +78,14 @@ if (editingNoteId) {
           placeholder="Note Title"
           value={title}
           onChange={(e) => dispatch(updateNoteField({ field: 'title', value: e.target.value }))}
-          className="w-full mb-4 p-2 border border-dashed border-gray-400 dark:border-gray-600 rounded-md bg-transparent outline-none"
+          className="w-full mb-4 p-2 border border-dashed border-gray-400 dark:border-gray-600 rounded-md bg-white dark:bg-[#181c23] text-gray-900 dark:text-gray-100 outline-none"
         />
 
         {/* Quill Editor */}
         <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Content</p>
-        <div className="my-quill flex flex-col w-full mb-4 h-36 rounded-md border border-dashed border-gray-400 dark:border-gray-600">
+        <div className="my-quill flex flex-col w-full mb-4 h-36 rounded-md border border-dashed border-gray-400 dark:border-gray-600 bg-white dark:bg-[#181c23]">
           <ReactQuill
-            className="w-full h-24 dark:text-gray-300"
+            className="w-full h-24 dark:text-gray-100 dark:bg-[#181c23]"
             theme="snow"
             value={content}
             onChange={(value) => dispatch(updateNoteField({ field: 'content', value }))}
@@ -89,21 +97,31 @@ if (editingNoteId) {
           {/* Color Selector */}
           <div className="flex items-center gap-2">
             {colorOptions.map(({ name, hex, darkhex }) => (
-    <button
-      key={name}
-      onClick={() => dispatch(updateNoteField({ field: 'selectedColor', value: name }))}
-      className={`w-6 h-6 rounded-full border-gray-400 dark:border-gray-700 ${
-        selectedColor === name ? 'border-0 ring-2 ring-blue-700' : 'border-2'
-      }`}
-      style={{ backgroundColor: darkMode ? darkhex : hex }}
-    />
-  ))}
+              <button
+                key={name}
+                onClick={() => dispatch(updateNoteField({ field: 'selectedColor', value: name }))}
+                className={`w-6 h-6 rounded-full border-gray-400 dark:border-gray-700 ${
+                  selectedColor === name ? 'border-0 ring-2 ring-blue-700 dark:ring-blue-300' : 'border-2'
+                }`}
+                style={{ backgroundColor: darkMode ? darkhex : hex }}
+              />
+            ))}
           </div>
 
           {/* Action Buttons */}
           <div className="flex gap-2">
-            <button onClick={() => dispatch(closeModal())} className="px-4 py-2 rounded border border-gray-400 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800">Cancel</button>
-            <button onClick={handleSave} className="px-4 py-2 rounded bg-blue-600 text-white hover:bg-blue-700">Save</button>
+            <button
+              onClick={() => dispatch(closeModal())}
+              className="px-4 py-2 rounded border border-gray-400 dark:border-gray-600 text-gray-700 dark:text-gray-200 bg-white dark:bg-[#23272f] hover:bg-gray-100 dark:hover:bg-[#181c23]"
+            >
+              Cancel
+            </button>
+            <button
+              onClick={handleSave}
+              className="px-4 py-2 rounded bg-blue-600 text-white hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600"
+            >
+              Save
+            </button>
           </div>
         </div>
       </div>

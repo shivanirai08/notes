@@ -9,6 +9,7 @@ import {
   restoreNote,
   permanentlyDeleteNote,
 } from "../redux/noteSlice";
+import { toast } from "react-toastify";
 
 function Delete() {
   const notes = useSelector((state) => state.notes.notes);
@@ -32,11 +33,13 @@ function Delete() {
       setNoteToDelete(null);
       if (selectedNoteId === noteToDelete.id) setSelectedNoteId(null);
     }
+    toast.success("Note permanently deleted");
   };
 
   const handleCancelDelete = () => {
     setShowDeleteModal(false);
     setNoteToDelete(null);
+    toast.info("Deletion cancelled");
   };
 
   return (

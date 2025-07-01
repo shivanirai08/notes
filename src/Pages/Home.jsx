@@ -9,14 +9,19 @@ import { startEditingNote, isFavorite } from "../redux/noteSlice";
 import { useDispatch } from "react-redux";
 import DeleteModal from "./DeleteModal";
 import { deleteNote } from "../redux/noteSlice";
+import { toast } from "react-toastify";
 
 function Home() {
   const notes = useSelector((state) => state.notes.notes);
   const activeNotes = notes.filter((note) => !note.isDeleted);
+  const searchText = useSelector((state) => state.notes.searchText);
   const [selectedNoteId, setSelectedNoteId] = useState(null);
   const selectedNote = notes.find((n) => n.id === selectedNoteId);
   const dispatch = useDispatch();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const filteredNotes = activeNotes.filter((note) =>
+    note.title.toLowerCase().includes(searchText.toLowerCase())
+  );
   const handleDeleteClick = (id) => {
     setSelectedNoteId(id);
     setShowDeleteModal(true);
@@ -26,7 +31,9 @@ function Home() {
     dispatch(deleteNote({ id: selectedNoteId }));
     setShowDeleteModal(false);
     setSelectedNoteId(null);
+    toast.success("Note deleted successfully");
   };
+  const favoriteToastId = 'fav-toast';
 
   return (
     <div className="relative flex h-screen w-full">
@@ -37,7 +44,7 @@ function Home() {
           className="flex flex-wrap gap-6 p-4"
           style={{ alignItems: "flex-start" }}
         >
-          {activeNotes.map((note) => (
+          {filteredNotes.map((note) => (
             <div
               key={note.id}
               style={{ flex: "0 1 250px", maxWidth: "100%" }}
@@ -51,7 +58,14 @@ function Home() {
                 color={note.color}
                 onDelete={() => handleDeleteClick(note.id)}
                 onEdit={() => dispatch(startEditingNote({ id: note.id }))}
-                onFavorite={() => dispatch(isFavorite({ id: note.id }))}
+                onFavorite={() => {
+                  dispatch(isFavorite({ id: note.id }));
+                  toast.info(
+                    note.isFavorite
+                      ? "Note removed from favorites"
+                      : "Note marked as favorite"
+                  , { toastId: favoriteToastId });
+                }}
                 isFavorite={note.isFavorite}
               />
             </div>
@@ -63,12 +77,12 @@ function Home() {
               onCancel={() => {
                 setShowDeleteModal(false);
                 setSelectedNoteId(null);
+                toast.info("Deletion cancelled");
               }}
               isDeleted={selectedNote?.isDeleted}
             />
           )}
 
-          {selectedNote && !showDeleteModal && (
             <Opennote
               note={selectedNote}
               onClose={() => setSelectedNoteId(null)}
@@ -77,7 +91,6 @@ function Home() {
               onFavorite={() => dispatch(isFavorite({ id: selectedNote?.id }))}
               isFavorite={selectedNote?.isFavorite}
             />
-          )}
           
         </div>
       </div>

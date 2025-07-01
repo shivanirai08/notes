@@ -8,7 +8,8 @@ const initialState = {
   isFavorite: false,
   isDeleted: false,
   editingNoteId: null,
-  notes: [], // saved notes list
+  notes: [],
+  searchText: '',
 };
 
 const noteSlice = createSlice({
@@ -83,6 +84,9 @@ const noteSlice = createSlice({
         state.isOpen = true;
       }
     },
+    setSearchText: (state, action) => {
+    state.searchText = action.payload;
+    },
   },
 });
 
@@ -98,6 +102,7 @@ export const {
   restoreNote,
   permanentlyDeleteNote,
   editNote,
+  setSearchText,
 } = noteSlice.actions;
 
 export default noteSlice.reducer;

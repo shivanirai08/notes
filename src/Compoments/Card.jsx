@@ -43,9 +43,9 @@ function Card({
               }}
             >
               {isFavorite ? (
-                <StarRateIcon fontSize="small" style={{ color: "#92400E" }} />
+                  <StarRateIcon fontSize="small" style={{ color: "#92400E" }} />
               ) : (
-                <StarRateOutlinedIcon fontSize="small" />
+                  <StarRateOutlinedIcon fontSize="small" />
               )}
             </button>
           </div>

@@ -4,6 +4,7 @@ import Addnote from '../Pages/Addnote';
 import {useDispatch} from 'react-redux';
 import {openModal} from '../redux/noteSlice';
 import { useTheme } from '../ThemeContext';
+import { setSearchText } from '../redux/noteSlice'; 
 
 export default function TopBar() {
   const dispatch = useDispatch();
@@ -17,6 +18,7 @@ export default function TopBar() {
         <input
           type="text"
           placeholder="Search..."
+          onChange={(e) => dispatch(setSearchText(e.target.value))}
           className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-white focus:outline-none focus:ring-1 focus:ring-blue-700"
         />
         <svg className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 dark:text-gray-300 pointer-events-none"
