@@ -24,7 +24,12 @@ function Card({
   return (
     <>
       <div
-        className={`relative w-64 h-64 rounded-lg shadow-lg dark:drop-shadow-lg overflow-hidden group`}
+        className={`relative rounded-lg shadow-lg dark:drop-shadow-lg overflow-hidden group
+          h-48 w-48
+          sm:w-48 sm:h-48
+          md:w-56 md:h-56
+          lg:w-64 lg:h-64
+        `}
         style={{
           backgroundColor: darkMode
             ? selectedColorObject?.darkhex
@@ -43,9 +48,9 @@ function Card({
               }}
             >
               {isFavorite ? (
-                  <StarRateIcon fontSize="small" style={{ color: "#92400E" }} />
+                <StarRateIcon fontSize="small" style={{ color: "#92400E" }} />
               ) : (
-                  <StarRateOutlinedIcon fontSize="small" />
+                <StarRateOutlinedIcon fontSize="small" />
               )}
             </button>
           </div>
@@ -61,9 +66,12 @@ function Card({
             />
           </div>
 
-          {/* Footer */}
+          {/* Footer: Date and Action Icons */}
           <div className="flex justify-between items-center mt-4 pt-4 text-xs text-gray-600 dark:text-gray-800">
-            <span>{date}</span>
+            <span>
+              <span className="block sm:inline"></span>
+              {date.split(",")[0]}
+            </span>
             <div className="space-x-2">
               {isBinMode ? (
                 <>
@@ -72,7 +80,8 @@ function Card({
                       e.stopPropagation();
                       onRestore();
                     }}
-                    className="opacity-0 group-hover:opacity-100 group-hover:text-secondarytext dark:group-hover:text-zinc-700">
+                    className="opacity-0 group-hover:opacity-100 group-hover:text-secondarytext dark:group-hover:text-zinc-700"
+                  >
                     <RestoreOutlinedIcon fontSize="small" />
                   </button>
                   <button

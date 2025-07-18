@@ -1,6 +1,4 @@
 import React from "react";
-import Navbar from "../Compoments/Navbar";
-import Topbar from "../Compoments/Topbar";
 import Card from "../Compoments/Card";
 import Opennote from "./Opennote";
 import { useSelector, useDispatch } from "react-redux";
@@ -39,14 +37,11 @@ function Delete() {
   const handleCancelDelete = () => {
     setShowDeleteModal(false);
     setNoteToDelete(null);
-    toast.info("Deletion cancelled");
+    toast.info("Note Restored");
   };
 
   return (
-    <div className="relative flex h-screen w-full">
-      <Navbar />
-      <div className="bg-zinc-50 dark:bg-zinc-900 w-full">
-        <Topbar />
+    
         <div
           className="flex flex-wrap gap-6 p-4"
           style={{ alignItems: "flex-start" }}
@@ -74,6 +69,7 @@ function Delete() {
               />
             </div>
           ))}
+
           {selectedNote && (
             <Opennote
               note={selectedNote}
@@ -84,7 +80,6 @@ function Delete() {
               isFavorite={selectedNote.isFavorite}
             />
           )}
-        </div>
 
         {showDeleteModal && (
           <DeleteModal
@@ -95,7 +90,6 @@ function Delete() {
           />
         )}
       </div>
-    </div>
   );
 }
 
