@@ -11,15 +11,23 @@ import { toast } from 'react-toastify'
 
 
 const Notes = ({type}) => {
+    const dispatch = useDispatch();
     const notes = useSelector((state) => state.notes.notes);
-    const searchText = useSelector((state) => state.notes.searchText);
     const [selectedNoteId, setSelectedNoteId] = useState(null);
-  const selectedNote = notes.find((n) => n.id === selectedNoteId);
-  const dispatch = useDispatch();
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
-  var filteredNotes = notes.filter((note) =>
-    note.title.toLowerCase().includes(searchText.toLowerCase())
-  );
+    const selectedNote = notes.find((n) => n.id === selectedNoteId);
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const searchText = useSelector((state) => state.notes.searchText);
+
+    var filteredNotes =
+  !searchText || searchText.trim() === ""
+    ? notes
+    : notes.filter(
+        (note) =>
+          note.title.toLowerCase().includes(searchText.toLowerCase()) ||
+          note.content.toLowerCase().includes(searchText.toLowerCase())
+      );
+
+
   const handleDeleteClick = (id) => {
     setSelectedNoteId(id);
     setShowDeleteModal(true);

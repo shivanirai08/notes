@@ -43,19 +43,22 @@ export default function TopBar() {
       </div>
       <div className='flex items-center gap-4'>
         <button
-  onClick={() => setShowSearch(true)}
-  className="p-2 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-white hover:scale-105 transition-transform block lg:hidden"
->
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    fill="none"
-    viewBox="0 0 24 24"
-    strokeWidth={2}
-    stroke="currentColor"
-    className="h-5 w-5"
-  > <circle cx={11} cy={11} r={7} /> <line x1={21} y1={21} x2={16.65} y2={16.65} />
-  </svg>
-</button>
+          onClick={() => {
+            dispatch(setSearchText(""));
+            setShowSearch(true);
+          }}
+          className="p-2 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-white hover:scale-105 transition-transform block lg:hidden"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth={2}
+            stroke="currentColor"
+            className="h-5 w-5"
+          > <circle cx={11} cy={11} r={7} /> <line x1={21} y1={21} x2={16.65} y2={16.65} />
+          </svg>
+        </button>
         <button onClick={() => dispatch(openModal())} className="bg-blue-700 text-white px-4 py-2 rounded-md hover:bg-blue-800 transition flex items-center gap-2 hidden lg:flex">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -99,22 +102,22 @@ export default function TopBar() {
     
         {/* Search Button */}
         {showSearch && (
-  <div
-    ref={searchRef}
-    className="fixed inset-0 z-50 h-20 flex items-start p-4 transition-transform duration-300 ease-in-out"
-  >
-    <input
-      autoFocus
-      type="text"
-      placeholder="Search..."
-      onChange={(e) => dispatch(setSearchText(e.target.value))}
-      className="w-full pl-4 pr-10 py-2 rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 dark:text-white focus:outline-none focus:ring-1 focus:ring-blue-700"
-    />
-    <button onClick={() => setShowSearch(false)} className="absolute top-5 right-6 text-xl font-bold text-gray-500 hover:text-black dark:text-gray-400 dark:hover:text-white">
-      &times;
-    </button>
-  </div>
-)}
+          <div
+            ref={searchRef}
+            className="fixed inset-0 z-50 h-20 flex items-start p-4 transition-transform duration-300 ease-in-out"
+          >
+            <input
+              autoFocus
+              type="text"
+              placeholder="Search..."
+              onChange={(e) => dispatch(setSearchText(e.target.value))}
+              className="w-full pl-4 pr-10 py-2 rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 dark:text-white focus:outline-none focus:ring-1 focus:ring-blue-700"
+            />
+            <button onClick={() => { dispatch(setSearchText("")); setShowSearch(false); }} className="absolute top-5 right-6 text-xl font-bold text-gray-500 hover:text-black dark:text-gray-400 dark:hover:text-white">
+              &times;
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

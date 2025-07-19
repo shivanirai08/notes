@@ -59,6 +59,8 @@ const Opennote = ({ note, onClose, onEdit, onDelete, onFavorite , isFavorite }) 
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
+                    onClose();
+                    e.preventDefault();
                     onEdit();
                   }}
                   className="text-gray-700 dark:text-zinc-800 hover:text-blue-600"
@@ -68,6 +70,8 @@ const Opennote = ({ note, onClose, onEdit, onDelete, onFavorite , isFavorite }) 
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
+                    onClose();
+                    e.preventDefault();
                     onDelete();
                   }}
                   className="text-gray-700 dark:text-zinc-800 hover:text-red-600"

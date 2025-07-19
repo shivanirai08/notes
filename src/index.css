@@ -1,3 +1,16 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Set height on the editable area */
+.note-editor .ql-container {
+  height: 150px; /* Or whatever height you prefer */
+  overflow-y: auto; /* Enable scrolling if content grows */
+}
+
+/* Optional: fine-tune padding and font */
+.note-editor .ql-editor {
+  padding: 12px;
+  font-size: 14px;
+  overflow-y: auto;
+}
