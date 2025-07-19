@@ -17,7 +17,7 @@ const Opennote = ({ note, onClose, onEdit, onDelete, onFavorite , isFavorite }) 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm px-2 sm:px-4">
       <div
-        className="w-full min-h-[50vh] sm:h-1/2 max-w-full sm:max-w-2xl bg-white dark:bg-zinc-900 rounded-xl shadow-xl relative p-3 sm:p-6 overflow-hidden flex flex-col"
+        className="w-full min-h-[50vh] sm:h-1/2 max-w-full sm:max-w-2xl bg-white dark:bg-zinc-900 rounded-xl shadow-xl relative p-3 sm:p-6 overflow-hidden flex flex-col justify-between"
         style={{
           backgroundColor: darkMode ? selectedColorObject?.darkhex : selectedColorObject?.hex,
         }}

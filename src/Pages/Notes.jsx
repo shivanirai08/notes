@@ -7,10 +7,13 @@ import { useState } from 'react'
 import DeleteModal from './DeleteModal'
 import { deleteNote } from '../redux/noteSlice'
 import { toast } from 'react-toastify'
+import { useTheme } from '../ThemeContext'
 
 
 
 const Notes = ({type}) => {
+  const { darkMode } = useTheme();
+  const isDarkMode = darkMode;
     const dispatch = useDispatch();
     const notes = useSelector((state) => state.notes.notes);
     const [selectedNoteId, setSelectedNoteId] = useState(null);
@@ -82,6 +85,50 @@ const Notes = ({type}) => {
               />
             </div>
           ))}
+
+           {filteredNotes.length === 0 && (
+  <div className="w-full flex flex-col items-center justify-center mt-16">
+    {(!searchText || searchText.trim() === "") && type === "all" && (
+      <>
+        <img
+          src={isDarkMode ? "/assets/notes_dark.svg" : "/assets/notes.svg"}
+          alt="Empty Notes"
+          className="w-40 h-40 lg:w-52 lg:h-52 mb-4"
+        />
+        <h2 className="text-xl font-semibold mb-2 dark:text-white">No Notes Found</h2>
+        <p className="text-gray-500 text-center dark:text-gray-400">You haven’t added any notes yet.</p>
+      </>
+    )}
+
+    {(!searchText || searchText.trim() === "") && type === "favorite" && (
+      <>
+        <img
+          src={isDarkMode ? "/assets/favourite_dark.svg" : "/assets/favourite.svg"}
+          alt="No Favorites"
+          className="w-40 h-40 lg:w-52 lg:h-52 mb-4"
+        />
+        <h2 className="text-xl font-semibold mb-2 dark:text-white">No Favorite Notes</h2>
+        <p className="text-gray-500 text-center dark:text-gray-400">You haven’t marked any note as favorite.</p>
+      </>
+    )}
+
+    {searchText && searchText.trim() !== "" && (
+      <>
+        <img
+          src={isDarkMode ? "/assets/result_dark.svg" : "/assets/result.svg"}
+          alt="No Search Results"
+          className="w-40 h-40 lg:w-52 lg:h-52 mb-4"
+        />
+        <h2 className="text-xl font-semibold mb-2 dark:text-white">No Results</h2>
+        <p className="text-gray-500 text-center dark:text-gray-400">
+          No notes match your search for "<span className="font-medium">{searchText}</span>"
+        </p>
+      </>
+    )}
+  </div>
+)}
+
+
 
           {showDeleteModal && (
             <DeleteModal

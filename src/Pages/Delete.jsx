@@ -8,6 +8,7 @@ import {
   permanentlyDeleteNote,
 } from "../redux/noteSlice";
 import { toast } from "react-toastify";
+import { useTheme } from "../ThemeContext";
 
 function Delete() {
   const notes = useSelector((state) => state.notes.notes);
@@ -40,56 +41,73 @@ function Delete() {
     toast.info("Note Restored");
   };
 
+  const { darkMode } = useTheme();
+
   return (
-    
-        <div
-          className="flex flex-wrap gap-6 p-4"
-          style={{ alignItems: "flex-start" }}
-        >
-          {deletedNotes.map((note) => (
-            <div
-              key={note.id}
-              style={{ flex: "0 1 250px", maxWidth: "100%" }}
-              onClick={() => setSelectedNoteId(note.id)}
-              className="cursor-pointer"
-            >
-              <Card
-                title={note.title}
-                content={note.content}
-                date={note.date}
-                color={note.color}
-                onEdit={() => console.log("Edit note")}
-                onFavorite={() => console.log("Favorite note")}
-                isFavorite={note.isFavorite}
-                isBinMode={true}
-                onRestore={() => dispatch(restoreNote({ id: note.id }))}
-                onDelete={() => {
-                  handleDeleteClick(note);
-                }}
-              />
-            </div>
-          ))}
-
-          {selectedNote && (
-            <Opennote
-              note={selectedNote}
-              onClose={() => setSelectedNoteId(null)}
-              onEdit={() => console.log("Edit note")}
-              onDelete={() => handleDeleteClick(selectedNote)}
-              onFavorite={() => console.log("Favorite note")}
-              isFavorite={selectedNote.isFavorite}
-            />
-          )}
-
-        {showDeleteModal && (
-          <DeleteModal
-            note={noteToDelete}
-            onConfirm={handleConfirmDelete}
-            onCancel={handleCancelDelete}
-            isDeleted={noteToDelete?.isDeleted}
+    <div
+      className="flex flex-wrap gap-6 p-4"
+      style={{ alignItems: "flex-start" }}
+    >
+      {deletedNotes.length === 0 ? (
+        <div className="w-full flex flex-col items-center justify-center mt-16">
+          <img
+            src={darkMode ? "/assets/bin_dark.svg" : "/assets/bin.svg"}
+            alt="Empty Bin"
+            className="w-40 h-40 lg:w-52 lg:h-52 mb-4"
           />
-        )}
-      </div>
+          <h2 className="text-xl font-semibold mb-2 dark:text-white">No deleted notes</h2>
+          <p className="text-gray-500 text-center dark:text-gray-400">
+            You have no notes in the bin. Deleted notes will appear here.
+          </p>
+        </div>
+      ) : (
+        deletedNotes.map((note) => (
+          <div
+            key={note.id}
+            onClick={() => setSelectedNoteId(note.id)}
+            className="
+                flex-shrink-0
+                w-48 sm:w-48 md:w-56 lg:w-64
+                min-h-[12rem] cursor-pointer"
+          >
+            <Card
+              title={note.title}
+              content={note.content}
+              date={note.date}
+              color={note.color}
+              onEdit={() => console.log("Edit note")}
+              onFavorite={() => console.log("Favorite note")}
+              isFavorite={note.isFavorite}
+              isBinMode={true}
+              onRestore={() => dispatch(restoreNote({ id: note.id }))}
+              onDelete={() => {
+                handleDeleteClick(note);
+              }}
+            />
+          </div>
+        ))
+      )}
+
+      {selectedNote && (
+        <Opennote
+          note={selectedNote}
+          onClose={() => setSelectedNoteId(null)}
+          onEdit={() => console.log("Edit note")}
+          onDelete={() => handleDeleteClick(selectedNote)}
+          onFavorite={() => console.log("Favorite note")}
+          isFavorite={selectedNote.isFavorite}
+        />
+      )}
+
+      {showDeleteModal && (
+        <DeleteModal
+          note={noteToDelete}
+          onConfirm={handleConfirmDelete}
+          onCancel={handleCancelDelete}
+          isDeleted={noteToDelete?.isDeleted}
+        />
+      )}
+    </div>
   );
 }
 
