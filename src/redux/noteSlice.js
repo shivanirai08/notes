@@ -1,4 +1,53 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk } from "@reduxjs/toolkit";
+import {
+  addNoteToFirebase,
+  deleteNoteFromFirebase,
+  moveToBin,
+  restoreNote,
+  toggleFavorite,
+  updateNote,
+  fetchNotes,
+} from "../services/noteService";
+
+
+export const fetchNotesFromFirebase = createAsyncThunk(
+  "notes/fetchNotes",
+  async (userId) => {
+    const notes = await fetchNotes(userId);
+    return notes;
+  }
+);
+
+export const addNote = createAsyncThunk(
+  "notes/addNote",
+  async ({ userId, note }) => await addNoteToFirebase(userId, note)
+);
+
+export const DeleteNote = createAsyncThunk(
+  "notes/deleteNote",
+  async (noteId) => await deleteNoteFromFirebase(noteId)
+);
+
+export const moveNoteToBin = createAsyncThunk(
+  "notes/moveToBin",
+  async (noteId) => await moveToBin(noteId)
+);
+
+export const restoreNoteFromBin = createAsyncThunk(
+  "notes/restoreNote",
+  async (noteId) => await restoreNote(noteId)
+);
+
+export const toggleFavoriteNote = createAsyncThunk(
+  "notes/toggleFavorite",
+  async ({ noteId, isFavorite }) => await toggleFavorite(noteId, isFavorite)
+);
+
+export const updateNoteInFirebase = createAsyncThunk(
+  "notes/updateNote",
+  async ({ noteId, data }) => await updateNote(noteId, data)
+);
 
 const initialState = {
   isOpen: false,
@@ -9,7 +58,7 @@ const initialState = {
   isDeleted: false,
   editingNoteId: null,
   notes: [],
-  searchText: '',
+  searchText: "",
 };
 
 const noteSlice = createSlice({
@@ -26,53 +75,11 @@ const noteSlice = createSlice({
       const { field, value } = action.payload;
       state[field] = value;
     },
-    saveNote: (state) => {
-      const newNote = {
-        title: state.title,
-        content: state.content,
-        color: state.selectedColor,
-        date: new Date().toLocaleString(),
-        isFavorite: state.isFavorite,
-        id: Date.now(),
-      };
-      state.notes.push(newNote);
-    },
     resetModal: (state) => {
       state.title = "";
       state.content = "";
       state.selectedColor = "bluebg";
       state.editingNoteId = null;
-    },
-    isFavorite: (state, action) => {
-      const { id } = action.payload;
-      const note = state.notes.find((note) => note.id === id);
-      if (note) {
-        note.isFavorite = !note.isFavorite; // Toggle favorite status
-      }
-    },
-    deleteNote: (state, action) => {
-      const note = state.notes.find((n) => n.id === action.payload.id);
-      if (note) {
-        note.isDeleted = true;
-      }
-    },
-    restoreNote: (state, action) => {
-      const note = state.notes.find((n) => n.id === action.payload.id);
-      if (note) {
-        note.isDeleted = false;
-      }
-    },
-    permanentlyDeleteNote: (state, action) => {
-      state.notes = state.notes.filter((n) => n.id !== action.payload.id);
-    },
-    editNote: (state, action) => {
-      const { id, title, content, color } = action.payload;
-      const note = state.notes.find((n) => n.id === id);
-      if (note) {
-        note.title = title;
-        note.content = content;
-        note.color = color;
-      }
     },
     startEditingNote: (state, action) => {
       const note = state.notes.find((n) => n.id === action.payload.id);
@@ -85,8 +92,38 @@ const noteSlice = createSlice({
       }
     },
     setSearchText: (state, action) => {
-    state.searchText = action.payload;
+      state.searchText = action.payload;
     },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchNotesFromFirebase.fulfilled, (state, action) => {
+        state.notes = action.payload;
+      })
+      .addCase(addNote.fulfilled, (state, action) => {
+        state.notes.push(action.payload);
+      })
+      .addCase(DeleteNote.fulfilled, (state, action) => {
+        state.notes = state.notes.filter((n) => n.id !== action.payload);
+      })
+      .addCase(moveNoteToBin.fulfilled, (state, action) => {
+        const note = state.notes.find((n) => n.id === action.payload);
+        if (note) note.isDeleted = true;
+      })
+      .addCase(restoreNoteFromBin.fulfilled, (state, action) => {
+        const note = state.notes.find((n) => n.id === action.payload);
+        if (note) note.isDeleted = false;
+      })
+      .addCase(updateNoteInFirebase.fulfilled, (state, action) => {
+        const { noteId, data } = action.payload;
+        const note = state.notes.find((n) => n.id === noteId);
+        if (note) Object.assign(note, data);
+      })
+      .addCase(toggleFavoriteNote.fulfilled, (state, action) => {
+        const { noteId, isFavorite } = action.payload;
+        const note = state.notes.find((n) => n.id === noteId);
+        if (note) note.isFavorite = isFavorite;
+      });
   },
 });
 
@@ -94,14 +131,8 @@ export const {
   openModal,
   closeModal,
   updateNoteField,
-  isFavorite,
-  deleteNote,
-  saveNote,
   resetModal,
   startEditingNote,
-  restoreNote,
-  permanentlyDeleteNote,
-  editNote,
   setSearchText,
 } = noteSlice.actions;
 

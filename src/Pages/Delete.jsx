@@ -1,18 +1,15 @@
 import React from "react";
-import Card from "../Compoments/Card";
+import Card from "../Components/Card";
 import Opennote from "./Opennote";
 import { useSelector, useDispatch } from "react-redux";
 import DeleteModal from "./DeleteModal";
-import {
-  restoreNote,
-  permanentlyDeleteNote,
-} from "../redux/noteSlice";
+import { restoreNoteFromBin, DeleteNote } from "../redux/noteSlice";
 import { toast } from "react-toastify";
 import { useTheme } from "../ThemeContext";
 
 function Delete() {
-  const notes = useSelector((state) => state.notes.notes);
   const dispatch = useDispatch();
+  const notes = useSelector((state) => state.notes.notes);
   const [selectedNoteId, setSelectedNoteId] = React.useState(null);
   const deletedNotes = notes.filter((n) => n.isDeleted);
   const selectedNote = notes.find((n) => n.id === selectedNoteId);
@@ -27,7 +24,7 @@ function Delete() {
 
   const handleConfirmDelete = () => {
     if (noteToDelete) {
-      dispatch(permanentlyDeleteNote({ id: noteToDelete.id }));
+      dispatch(DeleteNote(noteToDelete.id));
       setShowDeleteModal(false);
       setNoteToDelete(null);
       if (selectedNoteId === noteToDelete.id) setSelectedNoteId(null);
@@ -38,7 +35,6 @@ function Delete() {
   const handleCancelDelete = () => {
     setShowDeleteModal(false);
     setNoteToDelete(null);
-    toast.info("Note Restored");
   };
 
   const { darkMode } = useTheme();
@@ -55,7 +51,9 @@ function Delete() {
             alt="Empty Bin"
             className="w-40 h-40 lg:w-52 lg:h-52 mb-4"
           />
-          <h2 className="text-xl font-semibold mb-2 dark:text-white">No deleted notes</h2>
+          <h2 className="text-xl font-semibold mb-2 dark:text-white">
+            No deleted notes
+          </h2>
           <p className="text-gray-500 text-center dark:text-gray-400">
             You have no notes in the bin. Deleted notes will appear here.
           </p>
@@ -73,13 +71,17 @@ function Delete() {
             <Card
               title={note.title}
               content={note.content}
-              date={note.date}
+              createdAt={note.createdAt}
               color={note.color}
               onEdit={() => console.log("Edit note")}
               onFavorite={() => console.log("Favorite note")}
               isFavorite={note.isFavorite}
               isBinMode={true}
-              onRestore={() => dispatch(restoreNote({ id: note.id }))}
+              onRestore={() =>
+                dispatch(restoreNoteFromBin(note.id)).then(() => {
+                  toast.success("Note restored from bin");
+                })
+              }
               onDelete={() => {
                 handleDeleteClick(note);
               }}

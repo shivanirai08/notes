@@ -10,7 +10,7 @@ import { useTheme } from "../ThemeContext";
 function Card({
   title,
   content,
-  date,
+  createdAt,
   color,
   isFavorite,
   onDelete,
@@ -48,7 +48,7 @@ function Card({
               }}
             >
               {isFavorite ? (
-                <StarRateIcon fontSize="small" style={{ color: "#92400E" }} />
+                <StarRateIcon fontSize="small" style={{ color: "#b6b116ff" }} />
               ) : (
                 <StarRateOutlinedIcon fontSize="small" />
               )}
@@ -70,7 +70,9 @@ function Card({
           <div className="flex justify-between items-center mt-4 pt-4 text-xs text-gray-600 dark:text-gray-800">
             <span>
               <span className="block sm:inline"></span>
-              {date.split(",")[0]}
+              {createdAt
+                ? new Date(createdAt).toLocaleDateString("en-IN")
+                : "Unknown Date"}
             </span>
             <div className="space-x-2">
               {isBinMode ? (
