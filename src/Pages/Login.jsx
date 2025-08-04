@@ -4,36 +4,52 @@ import { useDispatch } from "react-redux";
 import { setUserFromFirebase } from "../redux/authSlice";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { FaUser, FaLock, FaTimes } from "react-icons/fa";
 
 function LoginModal({ isOpen, onClose }) {
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState({});
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const usernameRef = useRef(null);
+  const emailRef = useRef(null);
   const passwordRef = useRef(null);
 
   useEffect(() => {
     if (isOpen) {
-      setUsername("");
+      setEmail("");
       setPassword("");
       setErrors({});
     }
   }, [isOpen]);
 
+  const handleEmailChange = (e) => {
+    setEmail(e.target.value);
+    if (errors.email) {
+      setErrors(prevErrors => ({ ...prevErrors, email: "" }));
+    }
+  };
+
+  const handlePasswordChange = (e) => {
+    setPassword(e.target.value);
+    if (errors.password) {
+      setErrors(prevErrors => ({ ...prevErrors, password: "" }));
+    }
+  };
+
   const validate = () => {
     const newErrors = {};
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-    if (!username.trim()) {
-      newErrors.username = "Username is required";
-    } else if (username.includes(" ")) {
-      newErrors.username = "No spaces allowed in username";
+    if (!email.trim()) {
+      newErrors.email = "Email is required";
+    } else if (!emailRegex.test(email)) {
+      newErrors.email = "Please enter a valid email address";
     }
 
-    if (!password) {
+    if (!password.trim()) {
       newErrors.password = "Password is required";
     } else if (password.length < 6) {
       newErrors.password = "Password must be at least 6 characters";
@@ -41,8 +57,7 @@ function LoginModal({ isOpen, onClose }) {
 
     setErrors(newErrors);
 
-    // Focus on the first invalid input
-    if (newErrors.username) usernameRef.current?.focus();
+    if (newErrors.email) emailRef.current?.focus();
     else if (newErrors.password) passwordRef.current?.focus();
 
     return Object.keys(newErrors).length === 0;
@@ -52,72 +67,77 @@ function LoginModal({ isOpen, onClose }) {
     e.preventDefault();
     if (!validate()) return;
 
-    const email = `${username}@yourapp.com`;
-
     try {
       const auth = getAuth();
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
 
-      dispatch(setUserFromFirebase({ uid: user.uid, username }));
+      dispatch(setUserFromFirebase({ uid: user.uid, email }));
       toast.success("Logged in successfully!");
       onClose();
       navigate("/home");
     } catch (error) {
-      toast.error("Invalid credentials. Please try again.");
+      toast.error("Invalid email or password. Please try again.");
     }
   };
 
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center">
-      <div className="bg-white dark:bg-gray-800 rounded-lg p-6 w-full max-w-md relative">
-        {/* Cross Button */}
+    <div className="fixed inset-0 z-50 bg-black bg-opacity-70 flex items-center justify-center p-4">
+      <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-2xl lg:p-8 md:p-6 p-4 w-full max-w-lg relative transform transition-all duration-300 scale-100 ease-out">
+        {/* Close Button */}
         <button
           type="button"
           onClick={onClose}
-          className="absolute top-3 right-4 text-xl text-gray-500 hover:text-red-500"
+          className="absolute top-4 right-4 text-xl text-gray-400 hover:text-red-500 transition-colors duration-200"
         >
-          &times;
+          <FaTimes />
         </button>
 
-        <h2 className="text-2xl font-bold mb-6 text-center text-gray-800 dark:text-white">Login</h2>
+        <h2 className="text-3xl font-extrabold mb-8 text-center text-blue-600 dark:text-blue-200 tracking-wide">
+          Welcome Back
+        </h2>
 
-        <form onSubmit={handleLogin}>
-          <div className="mb-4">
-            <input
-              ref={usernameRef}
-              type="text"
-              placeholder="Username"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              className={`w-full p-2 border rounded dark:bg-gray-700 dark:text-white ${
-                errors.username ? "border-red-500" : "border-gray-300"
-              }`}
-            />
-            {errors.username && <p className="text-red-500 text-sm mt-1">{errors.username}</p>}
+        <form onSubmit={handleLogin} className="space-y-2">
+          {/* Email Input Field */}
+          <div>
+            <div className={`flex items-center bg-gray-100 dark:bg-gray-800 rounded-lg p-3 ${errors.email ? "ring-2 ring-red-500" : ""}`}>
+              <FaUser className="text-gray-500 dark:text-gray-400 mr-3" />
+              <input
+                ref={emailRef}
+                type="email"
+                placeholder="Email Address"
+                value={email}
+                onChange={handleEmailChange}
+                className="w-full bg-transparent outline-none text-gray-800 dark:text-white"
+              />
+            </div>
+            <p className="text-red-500 text-sm mt-2 ml-1 h-5">{errors.email}</p>
           </div>
 
-          <div className="mb-4">
-            <input
-              ref={passwordRef}
-              type="password"
-              placeholder="Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className={`w-full p-2 border rounded dark:bg-gray-700 dark:text-white ${
-                errors.password ? "border-red-500" : "border-gray-300"
-              }`}
-            />
-            {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password}</p>}
+          {/* Password Input Field */}
+          <div>
+            <div className={`flex items-center bg-gray-100 dark:bg-gray-800 rounded-lg p-3 ${errors.password ? "ring-2 ring-red-500" : ""}`}>
+              <FaLock className="text-gray-500 dark:text-gray-400 mr-3" />
+              <input
+                ref={passwordRef}
+                type="password"
+                placeholder="Password"
+                value={password}
+                onChange={handlePasswordChange}
+                className="w-full bg-transparent outline-none text-gray-800 dark:text-white"
+              />
+            </div>
+            <p className="text-red-500 text-sm mt-2 ml-1 h-5">{errors.password}</p>
           </div>
 
+          {/* Login Button */}
           <button
             type="submit"
-            className="w-full bg-blue-600 text-white p-2 rounded hover:bg-blue-700 transition"
+            className="w-full bg-blue-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-blue-700 transition-colors duration-200 transform focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
           >
-            Login
+            Sign In
           </button>
         </form>
       </div>
@@ -126,5 +146,3 @@ function LoginModal({ isOpen, onClose }) {
 }
 
 export default LoginModal;
-
-
