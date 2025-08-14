@@ -15,8 +15,7 @@ import { toast } from "react-toastify";
 
 export default function TopBar() {
   const dispatch = useDispatch();
-  const { uid, username } = useSelector((state) => state.auth);
-  const showUsername = uid && username;
+  const {username } = useSelector((state) => state.auth);
   const auth = getAuth();
   const [showModal, setShowModal] = useState(false);
   const { darkMode, setDarkMode } = useTheme();
@@ -149,7 +148,7 @@ export default function TopBar() {
         </button>
 
         {/* Profile Dropdown */}
-        <ProfileDropdown username={showUsername} handleLogout={handleLogout} />
+        <ProfileDropdown username={username} handleLogout={handleLogout} />
       </div>
 
       {/* Floating Add Note Button */}

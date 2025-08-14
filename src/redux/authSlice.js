@@ -1,21 +1,13 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "firebase/auth";
-
-const auth = getAuth();
+import { register, login, logout } from "../services/authService"; // Updated service
 
 // 🔐 Signup Thunk
 export const signupUser = createAsyncThunk(
   "auth/signupUser",
-  async ({ username, password }, { rejectWithValue }) => {
+  async ({ email, password, username }, { rejectWithValue }) => {
     try {
-      const email = `${username}@yourapp.com`;
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-      const user = userCredential.user;
-
-      return {
-        uid: user.uid,
-        username,
-      };
+      const user = await register(email, password, username); // our new register
+      return { uid: user.uid, username };
     } catch (error) {
       return rejectWithValue(error.message);
     }
@@ -25,16 +17,10 @@ export const signupUser = createAsyncThunk(
 // 🔐 Login Thunk
 export const loginUser = createAsyncThunk(
   "auth/loginUser",
-  async ({ username, password }, { rejectWithValue }) => {
+  async ({ email, password }, { rejectWithValue }) => {
     try {
-      const email = `${username}@yourapp.com`;
-      const userCredential = await signInWithEmailAndPassword(auth, email, password);
-      const user = userCredential.user;
-
-      return {
-        uid: user.uid,
-        username,
-      };
+      const { user, username } = await login(email, password); // fetch from Firestore
+      return { uid: user.uid, username };
     } catch (error) {
       return rejectWithValue(error.message);
     }
@@ -42,9 +28,12 @@ export const loginUser = createAsyncThunk(
 );
 
 // 🔐 Logout Thunk
-export const logoutUser = createAsyncThunk("auth/logoutUser", async () => {
-  await signOut(auth);
-});
+export const logoutUser = createAsyncThunk(
+  "auth/logoutUser",
+  async () => {
+    await logout();
+  }
+);
 
 const authSlice = createSlice({
   name: "auth",

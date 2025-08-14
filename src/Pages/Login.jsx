@@ -4,12 +4,13 @@ import { useDispatch } from "react-redux";
 import { setUserFromFirebase } from "../redux/authSlice";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { FaUser, FaLock, FaTimes } from "react-icons/fa";
+import { FaUser, FaLock, FaTimes, FaEye, FaEyeSlash } from "react-icons/fa";
 
 function LoginModal({ isOpen, onClose }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState({});
+  const [showPassword, setShowPassword] = useState(false);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -95,7 +96,7 @@ function LoginModal({ isOpen, onClose }) {
           <FaTimes />
         </button>
 
-        <h2 className="text-3xl font-extrabold mb-8 text-center text-blue-600 dark:text-blue-200 tracking-wide">
+        <h2 className="text-2xl font-extrabold mb-8 text-center text-black dark:text-white tracking-wide">
           Welcome Back
         </h2>
 
@@ -122,12 +123,19 @@ function LoginModal({ isOpen, onClose }) {
               <FaLock className="text-gray-500 dark:text-gray-400 mr-3" />
               <input
                 ref={passwordRef}
-                type="password"
+                type={showPassword ? "text" : "password"}
                 placeholder="Password"
                 value={password}
                 onChange={handlePasswordChange}
                 className="w-full bg-transparent outline-none text-gray-800 dark:text-white"
               />
+              <button
+                              type="button"
+                              onClick={() => setShowPassword(!showPassword)}
+                              className="text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-white"
+                            >
+                              {showPassword ? <FaEyeSlash /> : <FaEye />}
+                            </button>
             </div>
             <p className="text-red-500 text-sm mt-2 ml-1 h-5">{errors.password}</p>
           </div>
